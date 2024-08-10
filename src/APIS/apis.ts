@@ -1,4 +1,5 @@
-let BASE_URL = "http://localhost:3030/api";
+let BASE_URL =
+  "https://backend-itqzdi0ga-paudelsworups-projects.vercel.app/api";
 
 //get all the products
 export const getAllProducts = async () => {
@@ -15,7 +16,7 @@ export const getProductById = async (id: any) => {
 };
 
 //create a order
-export const createOrder = async (payload: any, paymentmethod:string) => {
+export const createOrder = async (payload: any, paymentmethod: string) => {
   return fetch(`${BASE_URL}/order/create?mode=${paymentmethod}`, {
     method: "POST",
     headers: {

@@ -1,22 +1,39 @@
 "use client";
 import { useState } from "react";
-import { Menu, Search, User, ShoppingCart, Heart } from "lucide-react";
+import { Menu, Search, User, ShoppingCart, Heart, LogOut } from "lucide-react";
 import { SearchInput } from "./SearchInput";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppSelector } from "@/app/store/store";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { logout } from "@/app/store/userSlice";
 
 export default function Navbar() {
   const { items, favourite } = useAppSelector((state) => state.cart);
 
+  const { userInfo } = useAppSelector((state) => state.auth);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.replace("/login");
   };
 
   return (
@@ -67,9 +84,36 @@ export default function Navbar() {
           <nav className="contents">
             <ul className="ml-4 xl:w-48 flex items-center justify-end">
               <li className="ml-2 lg:ml-4 relative inline-block">
-                <Button variant="ghost" size="icon" className="rounded-full">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                  onClick={toggleDropdown}
+                >
                   <User className="h-9 lg:h-10  text-gray-500" />
                 </Button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                    <div className="p-4">
+                      <p className="text-sm font-semibold text-gray-700">
+                        {userInfo?.fullname}
+                      </p>
+                      <p className="text-sm text-gray-500">{userInfo?.email}</p>
+                    </div>
+                    <hr />
+                    <div className="p-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start"
+                        onClick={handleLogout}
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </li>
               <li className="ml-2 lg:ml-4 relative inline-block">
                 {favourite.length > 0 && (

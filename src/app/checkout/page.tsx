@@ -78,7 +78,7 @@ export default function CheckoutPage() {
     const form = document.createElement("form");
     form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
     form.method = "POST";
-    form.target = "_blank";
+    // form.target = "_blank";
 
     const fields = {
       amount: orderDetails.totalPrice,
@@ -142,6 +142,8 @@ export default function CheckoutPage() {
       console.error("Stripe error:", error);
       toast.error("Payment failed. Please try again.");
     }
+
+    dispatch(clearCart());
   };
 
   return (
