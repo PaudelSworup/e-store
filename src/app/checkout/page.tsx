@@ -6,8 +6,9 @@ import { useAppSelector } from "../store/store";
 import { clearCart } from "../store/cartSlice";
 import { useDispatch } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
-import { createOrder } from "@/APIS/apis";
+import { createOrder, getAPIKEY } from "@/APIS/apis";
 import { toast } from "react-toastify";
+import { useQuery } from "react-query";
 
 export default function CheckoutPage() {
   // const { hashData, uuid } = useAppSelector((state) => state.hash);
@@ -18,7 +19,8 @@ export default function CheckoutPage() {
 
   const dispatch = useDispatch();
 
-  console.log(userInfo);
+  const { data, isLoading } = useQuery(["key"], async () => await getAPIKEY());
+  console.log("data", data);
 
   useEffect(() => {
     const shipping = searchParams.get("shipping");
@@ -61,6 +63,8 @@ export default function CheckoutPage() {
     phone: orderDetails.phone,
     user: userInfo?._id,
   };
+
+  console.log(orderData);
 
   const makePayment = async (paymentmethod: string) => {
     const signature = await createOrder(orderData, paymentmethod);
@@ -107,7 +111,7 @@ export default function CheckoutPage() {
 
   const makePaymentWithStripe = async (paymentmethod: string) => {
     const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? ""
+      process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? data.stripeApiKey
     );
 
     if (!stripe) {

@@ -44,3 +44,9 @@ export const signIn = async (payload: any) => {
       console.error("Error:", error);
     });
 };
+
+export const getAPIKEY = async () => {
+  const stripeKey = await fetch(`${BASE_URL}/stripe/api`);
+  const res = await stripeKey.json();
+  return res;
+};
