@@ -64,35 +64,35 @@ export default function Cart() {
       return;
     }
 
-    const orderData = {
-      orderItems: items.map((item: any) => ({
-        quantity: item.quantity,
-        product: {
-          id: item.id,
-          title: item.title,
-          price: item.price,
-          image: item.image,
-        },
-      })),
-      shippingAddress1: formData.shipping,
-      city: formData.city,
-      zip: formData.zip,
-      phone: formData.phone,
-      user: userInfo?._id,
-    };
+    // const orderData = {
+    //   orderItems: items.map((item: any) => ({
+    //     quantity: item.quantity,
+    //     product: {
+    //       id: item.id,
+    //       title: item.title,
+    //       price: item.price,
+    //       image: item.image,
+    //     },
+    //   })),
+    //   shippingAddress1: formData.shipping,
+    //   city: formData.city,
+    //   zip: formData.zip,
+    //   phone: formData.phone,
+    //   user: userInfo?._id,
+    // };
 
-    const signature = await createOrder(orderData);
-    if (signature.success === false) {
-      toast.error(signature?.error, { position: "top-right" });
-      return;
-    }
+    // const signature = await createOrder(orderData);
+    // if (signature.success === false) {
+    //   toast.error(signature?.error, { position: "top-right" });
+    //   return;
+    // }
 
-    dispatch(
-      setSignature({
-        uuid: signature?.order?._id,
-        hashData: signature.payment,
-      })
-    );
+    // dispatch(
+    //   setSignature({
+    //     uuid: signature?.order?._id,
+    //     hashData: signature.payment,
+    //   })
+    // );
 
     // Prepare data for submission
     const orderDetails = {

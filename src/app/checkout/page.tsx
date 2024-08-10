@@ -1,15 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../store/store";
 import { clearCart } from "../store/cartSlice";
 import { useDispatch } from "react-redux";
+import { loadStripe } from "@stripe/stripe-js";
+import { createOrder } from "@/APIS/apis";
+import { toast } from "react-toastify";
 
 export default function CheckoutPage() {
-  const { hashData, uuid } = useAppSelector((state) => state.hash);
+  // const { hashData, uuid } = useAppSelector((state) => state.hash);
+  const { items } = useAppSelector((state) => state.cart);
+  const { userInfo } = useAppSelector((state) => state.auth);
   const searchParams = useSearchParams();
   const [orderDetails, setOrderDetails] = useState<any>(null);
 
@@ -39,7 +43,38 @@ export default function CheckoutPage() {
     return <div>Loading...</div>;
   }
 
-  const makePayment = () => {
+  //ordered data structure
+  const orderData = {
+    orderItems: items.map((item: any) => ({
+      quantity: item.quantity,
+      product: {
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        image: item.image,
+      },
+    })),
+    shippingAddress1: orderDetails.shipping,
+    city: orderDetails.city,
+    zip: orderDetails.zip,
+    phone: orderDetails.phone,
+    user: userInfo?._id,
+  };
+
+  const makePayment = async (paymentmethod: string) => {
+    const signature = await createOrder(orderData, paymentmethod);
+    if (signature.success === false) {
+      toast.error(signature?.error, { position: "top-right" });
+      return;
+    }
+
+    // dispatch(
+    //   setSignature({
+    //     uuid: signature?.order?._id,
+    //     hashData: signature.payment,
+    //   })
+    // );
+
     const form = document.createElement("form");
     form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
     form.method = "POST";
@@ -49,14 +84,14 @@ export default function CheckoutPage() {
       amount: orderDetails.totalPrice,
       tax_amount: "0",
       total_amount: orderDetails.totalPrice,
-      transaction_uuid: uuid, // Replace with your transaction UUID
+      transaction_uuid: signature?.order?._id, // Replace with your transaction UUID
       product_code: "EPAYTEST",
       product_service_charge: "0",
       product_delivery_charge: "0",
       success_url: "http://localhost:3030/api/complete-payment",
       failure_url: "https://developer.esewa.com.np/failure",
-      signed_field_names: hashData?.signed_field_names,
-      signature: hashData?.signature, // Replace with your actual signature
+      signed_field_names: signature?.payment.signed_field_names,
+      signature: signature?.payment.signature, // Replace with your actual signature
       secret: "8gBm/:&EnhH.1/q", // Replace with your actual secret key
     };
 
@@ -75,22 +110,41 @@ export default function CheckoutPage() {
     // form.remove();
   };
 
+  const makePaymentWithStripe = async (paymentmethod: string) => {
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? ""
+    );
+
+    if (!stripe) {
+      toast.error("Stripe failed to load.");
+      return;
+    }
+
+    const res = await createOrder(orderData, paymentmethod);
+
+    if (res.success === false) {
+      toast.error(res.error, { position: "top-right" });
+      return;
+    }
+
+    const sessionId = res.payment;
+
+    if (!sessionId) {
+      console.error("No session ID returned from the server.");
+      return;
+    }
+
+    const { error } = await stripe.redirectToCheckout({
+      sessionId: sessionId,
+    });
+
+    if (error) {
+      console.error("Stripe error:", error);
+      toast.error("Payment failed. Please try again.");
+    }
+  };
+
   return (
-    // <div>
-    //   <h1>Checkout Page</h1>
-    //   <p>Name: {orderDetails.name}</p>
-    //   <p>Email: {orderDetails.email}</p>
-    //   <p>Phone: {orderDetails.phone}</p>
-    //   <p>Total Price: {orderDetails.totalPrice}</p>
-    //   <h2>Items:</h2>
-    //   <ul>
-    //     {orderDetails.items.map((item: any) => (
-    //       <li key={item.id}>
-    //         {item.title} - Quantity: {item.quantity}
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
     <>
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
         <div className="px-4 pt-8">
@@ -215,12 +269,21 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <button
-            onClick={makePayment}
-            className="mt-4 mb-8 w-full rounded-md bg-[#60bb46] hover:bg-[#51a538]  px-6 py-3 font-medium text-white"
-          >
-            Pay with Esewa
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => makePayment("esewa")}
+              className="mt-4 mb-8 w-full rounded-md bg-[#60bb46] hover:bg-[#51a538]  px-6 py-3 font-medium text-white"
+            >
+              Pay with Esewa
+            </button>
+
+            <button
+              onClick={() => makePaymentWithStripe("stripe")}
+              className="mt-4 mb-8 w-full rounded-md bg-[#625afa]   px-6 py-3 font-medium text-white"
+            >
+              Pay with Stripe
+            </button>
+          </div>
         </div>
       </div>
     </>

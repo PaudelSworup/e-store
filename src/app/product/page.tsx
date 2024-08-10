@@ -20,7 +20,7 @@ import { overFlow } from "@/ReusableFunction/Overflow";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addToCart, addToFavourite } from "../store/cartSlice";
 
 import { Heart } from "lucide-react";
@@ -34,8 +34,7 @@ export default function Product() {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  console.log(isAuthenticated);
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading } = useQuery(
     ["products"],
     async () => await getAllProducts()
   );

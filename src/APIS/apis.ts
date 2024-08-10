@@ -15,8 +15,8 @@ export const getProductById = async (id: any) => {
 };
 
 //create a order
-export const createOrder = async (payload: any) => {
-  return fetch(`${BASE_URL}/order/create`, {
+export const createOrder = async (payload: any, paymentmethod:string) => {
+  return fetch(`${BASE_URL}/order/create?mode=${paymentmethod}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

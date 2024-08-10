@@ -3,8 +3,10 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 import cartReducer from "./cartSlice";
 import userReducer from "./userSlice";
 import hashReducer from "./hashSlice";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
-import storage from "redux-persist/lib/storage";
+// import storage from "redux-persist/lib/storage";
+import storageSession from "redux-persist/lib/storage/session";
 
 import {
   persistStore,
@@ -17,6 +19,30 @@ import {
   REGISTER,
 } from "redux-persist";
 
+const createNoopStorage = () => {
+  return {
+    getItem(_key: any) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: any, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: any) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
+
+const session =
+  typeof window !== "undefined"
+    ? createWebStorage("session")
+    : createNoopStorage();
+
 const cartPersistConfig = {
   key: "cart",
   storage,
@@ -25,9 +51,8 @@ const cartPersistConfig = {
 
 const userPersistConfig = {
   key: "auth",
-  storage,
+  storage: session,
   version: 1,
-  wishlist: ["auth"],
 };
 
 const hashPersistConfig = {
@@ -40,13 +65,13 @@ const persistedReducer = persistReducer(cartPersistConfig, cartReducer);
 
 const userPersistedReducer = persistReducer(userPersistConfig, userReducer);
 
-const hashPersistedReducer = persistReducer(hashPersistConfig, hashReducer);
+// const hashPersistedReducer = persistReducer(hashPersistConfig, hashReducer);
 
 export const store = configureStore({
   reducer: {
     cart: persistedReducer,
     auth: userPersistedReducer,
-    hash: hashPersistedReducer,
+    // hash: hashPersistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

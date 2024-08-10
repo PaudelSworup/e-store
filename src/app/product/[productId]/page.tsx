@@ -25,7 +25,6 @@ export default function ProductDescription({
     ["productid"],
     async () => await getProductById(params.productId)
   );
-  console.log(data?.products);
 
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
