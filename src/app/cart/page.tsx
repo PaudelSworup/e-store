@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { createOrder } from "@/APIS/apis";
 import { setSignature } from "../store/hashSlice";
+import Image from "next/image";
 
 export default function Cart() {
   const { userInfo } = useAppSelector((state) => state.auth);
@@ -64,36 +65,6 @@ export default function Cart() {
       return;
     }
 
-    // const orderData = {
-    //   orderItems: items.map((item: any) => ({
-    //     quantity: item.quantity,
-    //     product: {
-    //       id: item.id,
-    //       title: item.title,
-    //       price: item.price,
-    //       image: item.image,
-    //     },
-    //   })),
-    //   shippingAddress1: formData.shipping,
-    //   city: formData.city,
-    //   zip: formData.zip,
-    //   phone: formData.phone,
-    //   user: userInfo?._id,
-    // };
-
-    // const signature = await createOrder(orderData);
-    // if (signature.success === false) {
-    //   toast.error(signature?.error, { position: "top-right" });
-    //   return;
-    // }
-
-    // dispatch(
-    //   setSignature({
-    //     uuid: signature?.order?._id,
-    //     hashData: signature.payment,
-    //   })
-    // );
-
     // Prepare data for submission
     const orderDetails = {
       shipping: formData.shipping,
@@ -121,10 +92,17 @@ export default function Cart() {
             <div key={item?.id} className="grid grid-cols-3 items-start gap-4">
               <div className="col-span-2 flex items-start gap-4">
                 <div className="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-2 rounded-md">
-                  <img
+                  <Image
                     src={item.image}
+                    alt="Description"
+                    width={500}
+                    height={300}
                     className="w-full h-full object-contain mix-blend-multiply"
                   />
+                  {/* <img
+                    src={item.image}
+                    className="w-full h-full object-contain mix-blend-multiply"
+                  /> */}
                 </div>
 
                 <div className="flex flex-col">

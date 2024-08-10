@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Image from "next/image";
 
 export default function Banner() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -54,9 +55,11 @@ export default function Banner() {
       >
         {slides.map((src, index) => (
           <CarouselItem key={index}>
-            <img
+            <Image
               src={src}
               alt=""
+              width={900}
+              height={900}
               className="w-full xl:h-[500px] overflow-hidden"
             />
           </CarouselItem>

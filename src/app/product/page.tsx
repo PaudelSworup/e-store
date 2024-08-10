@@ -26,7 +26,7 @@ import { addToCart, addToFavourite } from "../store/cartSlice";
 import { Heart } from "lucide-react";
 import { toast } from "react-toastify";
 import Login from "../login/page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../store/store";
 
 export default function Product() {
@@ -38,6 +38,12 @@ export default function Product() {
     ["products"],
     async () => await getAllProducts()
   );
+
+  useEffect(() => {
+    // Check authentication status from session storage
+    isAuthenticated === true;
+    setShowLoginDialog(!isAuthenticated);
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return <ProductDescriptionSkeleton />;
@@ -114,7 +120,10 @@ export default function Product() {
         ))}
       </div>
       {/* Dialog for login */}
-      <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
+      <Dialog
+        open={showLoginDialog}
+        onOpenChange={(open) => setShowLoginDialog(open)}
+      >
         <div className="flex items-center justify-center min-h-screen">
           <DialogContent className="w-[80%] max-w-[425px] sm:max-w-[80%]">
             <DialogHeader>
@@ -124,7 +133,7 @@ export default function Product() {
               </DialogDescription>
             </DialogHeader>
             <div className="py-4">
-              <Login onSuccess={() => setShowLoginDialog(false)} />
+              <Login />
             </div>
           </DialogContent>
         </div>

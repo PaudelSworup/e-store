@@ -8,12 +8,9 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/userSlice";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Image from "next/image"; // Import Image component
 
-interface LoginProps {
-  onSuccess?: () => void;
-}
-
-export default function Login({ onSuccess }: LoginProps) {
+export default function Login() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -43,11 +40,7 @@ export default function Login({ onSuccess }: LoginProps) {
         password: "",
       });
 
-      toast.success("login Success", { position: "top-center" });
-
-      if (onSuccess) {
-        onSuccess();
-      }
+      toast.success("Login Success", { position: "top-center" });
 
       router.push("/");
     },
@@ -76,7 +69,7 @@ export default function Login({ onSuccess }: LoginProps) {
                   Sign in
                 </h3>
                 <p className="text-sm mt-4 text-gray-800">
-                  Don't have an account
+                  Don&apos;t have an account
                   <Link href="">
                     <span className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">
                       {" "}
@@ -156,10 +149,12 @@ export default function Login({ onSuccess }: LoginProps) {
           </div>
 
           <div className="md:h-full bg-[#000842] rounded-xl lg:p-12 p-8">
-            <img
+            <Image
               src="https://readymadeui.com/signin-image.webp"
               className="w-full h-full object-contain"
-              alt="login-image"
+              alt="Login image"
+              width={500} // Add width and height for optimization
+              height={500}
             />
           </div>
         </div>

@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,13 +66,6 @@ export default function CheckoutPage() {
       toast.error(signature?.error, { position: "top-right" });
       return;
     }
-
-    // dispatch(
-    //   setSignature({
-    //     uuid: signature?.order?._id,
-    //     hashData: signature.payment,
-    //   })
-    // );
 
     const form = document.createElement("form");
     form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";

@@ -1,13 +1,14 @@
 "use client";
-
+import react from "react";
 import { Button } from "@/components/ui/button";
 import { Trash, ShoppingBasket } from "lucide-react";
 import { useAppSelector } from "../store/store";
 
 import { useDispatch } from "react-redux";
 import { addToCart, removeFromFavourite } from "../store/cartSlice";
+import Image from "next/image";
 
-export default function page() {
+export default function Page() {
   const { favourite } = useAppSelector((state) => state.cart);
   const dispatch = useDispatch();
   return (
@@ -24,9 +25,12 @@ export default function page() {
             <div className="grid grid-cols-3 items-start gap-4">
               <div className="col-span-2 flex items-start gap-4">
                 <div className="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0 bg-gray-100 p-2 rounded-md">
-                  <img
+                  <Image
                     src={data.image}
+                    width={400}
+                    height={500}
                     className="w-full h-full object-contain mix-blend-multiply"
+                    alt=""
                   />
                 </div>
 
