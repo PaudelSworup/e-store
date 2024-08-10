@@ -1,5 +1,4 @@
-let BASE_URL =
-  "https://backend-itqzdi0ga-paudelsworups-projects.vercel.app/api";
+let BASE_URL = "https://backend-iota-inky-90.vercel.app/api";
 
 //get all the products
 export const getAllProducts = async () => {

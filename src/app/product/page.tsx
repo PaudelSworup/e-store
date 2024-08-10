@@ -7,15 +7,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { overFlow } from "@/ReusableFunction/Overflow";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,25 +17,21 @@ import { addToCart, addToFavourite } from "../store/cartSlice";
 
 import { Heart } from "lucide-react";
 import { toast } from "react-toastify";
-import Login from "../login/page";
-import { useEffect, useState } from "react";
+
 import { useAppSelector } from "../store/store";
+import { useRouter } from "next/navigation";
 
 export default function Product() {
   const dispatch = useDispatch();
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
+
+  const router = useRouter();
+
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const { data, isLoading } = useQuery(
     ["products"],
     async () => await getAllProducts()
   );
-
-  useEffect(() => {
-    // Check authentication status from session storage
-    isAuthenticated === true;
-    setShowLoginDialog(!isAuthenticated);
-  }, [isAuthenticated]);
 
   if (isLoading) {
     return <ProductDescriptionSkeleton />;
@@ -54,7 +42,7 @@ export default function Product() {
       toast.error("You must be logged in to add items to your cart", {
         position: "top-right",
       });
-      setShowLoginDialog(true);
+      router.push("/login");
       return;
     }
 
@@ -66,7 +54,7 @@ export default function Product() {
       toast.error("You must be logged in to add in your favourites", {
         position: "top-right",
       });
-      setShowLoginDialog(true);
+      router.push("/login");
       return;
     }
 
@@ -120,24 +108,6 @@ export default function Product() {
         ))}
       </div>
       {/* Dialog for login */}
-      <Dialog
-        open={showLoginDialog}
-        onOpenChange={(open) => setShowLoginDialog(open)}
-      >
-        <div className="flex items-center justify-center min-h-screen">
-          <DialogContent className="w-[80%] max-w-[425px] sm:max-w-[80%]">
-            <DialogHeader>
-              <DialogTitle>Sign in</DialogTitle>
-              <DialogDescription>
-                Please sign in to access your account and continue.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              <Login />
-            </div>
-          </DialogContent>
-        </div>
-      </Dialog>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import {
   MapPin,
   Navigation2,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   decrementQuantity,
   incrementQuantity,
@@ -20,12 +20,12 @@ import {
 import { useAppSelector } from "../store/store";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { createOrder } from "@/APIS/apis";
-import { setSignature } from "../store/hashSlice";
+// import { createOrder } from "@/APIS/apis";
+// import { setSignature } from "../store/hashSlice";
 import Image from "next/image";
 
 export default function Cart() {
-  const { userInfo } = useAppSelector((state) => state.auth);
+  // const { userInfo } = useAppSelector((state) => state.auth);
 
   const router = useRouter();
   const dispatch = useDispatch();
