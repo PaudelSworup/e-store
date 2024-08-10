@@ -80,7 +80,8 @@ export default function CheckoutPage() {
       product_code: "EPAYTEST",
       product_service_charge: "0",
       product_delivery_charge: "0",
-      success_url: "http://localhost:3030/api/complete-payment",
+      success_url:
+        "https://backend-iota-inky-90.vercel.app/api/complete-payment",
       failure_url: "https://developer.esewa.com.np/failure",
       signed_field_names: signature?.payment.signed_field_names,
       signature: signature?.payment.signature, // Replace with your actual signature
