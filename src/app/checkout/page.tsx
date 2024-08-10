@@ -18,6 +18,8 @@ export default function CheckoutPage() {
 
   const dispatch = useDispatch();
 
+  console.log(userInfo);
+
   useEffect(() => {
     const shipping = searchParams.get("shipping");
 
