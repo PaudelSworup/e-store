@@ -42,7 +42,7 @@ export default function Product() {
       toast.error("You must be logged in to add items to your cart", {
         position: "top-right",
       });
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
@@ -54,7 +54,7 @@ export default function Product() {
       toast.error("You must be logged in to add in your favourites", {
         position: "top-right",
       });
-      router.push("/login");
+      router.replace("/login");
       return;
     }
 
