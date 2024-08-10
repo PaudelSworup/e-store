@@ -13,7 +13,7 @@ import { useQuery } from "react-query";
 export default function CheckoutPage() {
   // const { hashData, uuid } = useAppSelector((state) => state.hash);
   const { items } = useAppSelector((state) => state.cart);
-  const { userInfo } = useAppSelector((state) => state.auth);
+  const { userInfo, isAuthenticated } = useAppSelector((state) => state.auth);
   const searchParams = useSearchParams();
   const [orderDetails, setOrderDetails] = useState<any>(null);
 
@@ -67,6 +67,11 @@ export default function CheckoutPage() {
   console.log(orderData);
 
   const makePayment = async (paymentmethod: string) => {
+    if (isAuthenticated === false) {
+      toast.error("login to checkout", { position: "top-right" });
+      return;
+    }
+
     const signature = await createOrder(orderData, paymentmethod);
     if (signature.success === false) {
       toast.error(signature?.error, { position: "top-right" });
@@ -110,6 +115,10 @@ export default function CheckoutPage() {
   };
 
   const makePaymentWithStripe = async (paymentmethod: string) => {
+    if (isAuthenticated === false) {
+      toast.error("login to checkout", { position: "top-right" });
+      return;
+    }
     const stripe = await loadStripe(
       process.env.NEXT_PUBLIC_STRIPE_API_KEY ?? data.stripeApiKey
     );

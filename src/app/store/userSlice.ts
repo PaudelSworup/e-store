@@ -34,7 +34,13 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       (state.token = action.payload.token),
         (state.userInfo = action.payload.userInfo);
-      Cookies.set("token", action.payload.token, { expires: 7 });
+      Cookies.set("token", action.payload.token, {
+        expires: undefined, // This makes it a session cookie
+        path: "/",
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+      });
+
       // sessionStorage.setItem("userInfo", JSON.stringify(state));
     },
 
@@ -42,6 +48,7 @@ const userSlice = createSlice({
       state.isAuthenticated = false;
       state.token = null;
       state.userInfo = null;
+      Cookies.remove("token");
     },
   },
 });

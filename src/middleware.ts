@@ -15,17 +15,17 @@ export default function middleware(req: NextRequest) {
     }
   }
 
-  if (req.nextUrl.pathname.startsWith("/login")) {
-    if (token) {
-      // Redirect to homepage or cart
-      url.pathname = "/";
-      return NextResponse.redirect(url);
-    }
-  }
+  // if (req.nextUrl.pathname.startsWith("/login")) {
+  //   if (token) {
+  //     // Redirect to homepage or cart
+  //     url.pathname = "/";
+  //     return NextResponse.redirect(url);
+  //   }
+  // }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/cart", "/favourite", "/login"], // Apply middleware to cart and login routes
+  matcher: ["/cart", "/favourite"], // Apply middleware to cart and login routes
 };
