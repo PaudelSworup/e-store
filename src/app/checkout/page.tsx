@@ -135,7 +135,12 @@ export default function CheckoutPage() {
       return;
     }
 
+    dispatch(clearCart());
+
     const sessionId = res.payment;
+
+    const sessionData = res.session;
+    console.log(sessionData);
 
     if (!sessionId) {
       console.error("No session ID returned from the server.");
@@ -150,8 +155,6 @@ export default function CheckoutPage() {
       console.error("Stripe error:", error);
       toast.error("Payment failed. Please try again.");
     }
-
-    dispatch(clearCart());
   };
 
   return (

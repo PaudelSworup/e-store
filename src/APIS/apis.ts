@@ -1,4 +1,5 @@
 let BASE_URL = "https://backend-iota-inky-90.vercel.app/api";
+// let BASE_URL = "http://localhost:3030/api";
 
 //get all the products
 export const getAllProducts = async () => {
